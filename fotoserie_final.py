@@ -110,7 +110,7 @@ if __name__ == '__main__':
             pylon.FeaturePersistence.Load(nodeFile2, cam.GetNodeMap(), True)
             # Print the model name of the cam.
 
-            logging.info("Using device ", cam.GetDeviceInfo().GetModelName())
+            logging.info(f"Using device  {cam.GetDeviceInfo().GetModelName()}")
 
             # Just for demonstration, read the content of the file back to the cam's node map with enabled validation.
             # demonstrate some feature access
