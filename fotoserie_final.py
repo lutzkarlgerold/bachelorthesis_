@@ -69,7 +69,7 @@ def get_image_from_cam(camera, target_path, save_file=True, file_name="Test-ref.
 
 if __name__ == '__main__':
     # Dateiname
-    probenname = "Test"
+    probenname = "042-2"
     # The name of the pylon file handle
     nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
     nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
@@ -131,7 +131,7 @@ if __name__ == '__main__':
             print(f"save_image = {save_image}")
 
             picture_name = f"{probenname}-{x}.png"
-            get_image_from_cam(cam, sw_dir, save_file=save_image,file_name=)
+            get_image_from_cam(cam, sw_dir, save_file=save_image,file_name=picture_name)
 
 
         except genicam.GenericException as e:
