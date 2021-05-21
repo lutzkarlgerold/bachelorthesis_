@@ -54,11 +54,10 @@ def get_image_from_cam(camera, target_path, save_file=True, file_name="Test-ref.
             os.chdir(target_path)
 
             if save_file:
-                filename =file_name  # % quality
+                filename = file_name  # % quality
                 img.Save(pylon.ImageFileFormat_Jpeg, filename, ipo)
         else:
             raise Exception("Platform not supported")
-
 
         # In order to make it possible to reuse the grab result for grabbing
         # again, we have to release the image (effectively emptying the
@@ -87,7 +86,7 @@ if __name__ == '__main__':
         ensure_directory(color_dir)
 
         picture_name = f"{probenname}-ref.jpg"
-        get_image_from_cam(cam, color_dir,file_name=picture_name)
+        get_image_from_cam(cam, color_dir, file_name=picture_name)
 
     cam.Close()
 
@@ -131,7 +130,7 @@ if __name__ == '__main__':
             print(f"save_image = {save_image}")
 
             picture_name = f"{probenname}-{x}.png"
-            get_image_from_cam(cam, sw_dir, save_file=save_image,file_name=)
+            get_image_from_cam(cam, sw_dir, save_file=save_image, file_name=picture_name)
 
 
         except genicam.GenericException as e:
