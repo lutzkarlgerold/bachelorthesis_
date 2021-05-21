@@ -69,7 +69,7 @@ def get_image_from_cam(camera, target_path, save_file=True, file_name="Test-ref.
 
 if __name__ == '__main__':
     # Dateiname
-    probenname = "042-2"
+    probenname = "041-2"
     # The name of the pylon file handle
     nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
     nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
     i = 0
 
-    for x in range(0, 8):
+    for x in range(0, 9):
         img_count = str(i)
         i = i + 1
         # Number of images to be grabbed.
