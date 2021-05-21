@@ -128,7 +128,7 @@ if __name__ == '__main__':
             sw_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/sw_pictures"
             ensure_directory(sw_dir)
             save_image = x != 0  # False für 0, True für alle anderen
-
+            print(f"save_image = {save_image}")
             get_image_from_cam(cam, sw_dir, save_file=save_image)
 
 
