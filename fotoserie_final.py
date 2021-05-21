@@ -144,7 +144,7 @@ if __name__ == '__main__':
             cam.Close()
 
         conn = rpyc.connect('192.168.178.175', port=18812)
-        conn.root.run_motor_degrees(20, 90)
+        conn.root.run_motor_degrees(20, 45)
         conn.root.speak_message(img_count)
 
     sys.exit(exitCode)
