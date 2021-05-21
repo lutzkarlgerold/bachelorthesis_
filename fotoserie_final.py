@@ -85,7 +85,7 @@ if __name__ == '__main__':
     pylon.FeaturePersistence.Load(nodeFile1, cam.GetNodeMap(), True)
 
     for i in range(num_img_to_save):
-        color_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures"
+        color_dir = "C:/Users/lg/Dokumente/BA/bachelorthesis/reference pictures"
         ensure_directory(color_dir)
         get_image_from_cam(cam, color_dir)
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
             # Start the grabbing of c_countOfImagesToGrab images.
             # The cam device is parameterized with a default configuration which
             # sets up free-running continuous acquisition.
-            sw_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/sw_pictures"
+            sw_dir = "C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures"
             ensure_directory(sw_dir)
             save_image = x != 0  # False für 0, True für alle anderen
             print(f"save_image = {save_image}")
