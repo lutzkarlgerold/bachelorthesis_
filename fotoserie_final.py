@@ -35,7 +35,7 @@ def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
                 logging.error(f"failed to create folder {target_folder}")
 
 
-def get_image_from_cam(camera, target_path, save_file=True):
+def get_image_from_cam(camera, target_path, save_file=True, file_name="Test-ref.jpg"):
     camera.StartGrabbing()
     with camera.RetrieveResult(2000) as result:
 
@@ -54,12 +54,11 @@ def get_image_from_cam(camera, target_path, save_file=True):
             os.chdir(target_path)
 
             if save_file:
-                filename = datei + "ref.jpeg"  # % quality
+                filename =file_name  # % quality
                 img.Save(pylon.ImageFileFormat_Jpeg, filename, ipo)
         else:
-            if save_file:
-                filename = "saved_pypylon_img_%d.png" % i
-                img.Save(pylon.ImageFileFormat_Png, filename)
+            raise Exception("Platform not supported")
+
 
         # In order to make it possible to reuse the grab result for grabbing
         # again, we have to release the image (effectively emptying the
@@ -70,8 +69,7 @@ def get_image_from_cam(camera, target_path, save_file=True):
 
 if __name__ == '__main__':
     # Dateiname
-    datei = "Test-"
-
+    probenname = "Test"
     # The name of the pylon file handle
     nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
     nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
@@ -87,7 +85,9 @@ if __name__ == '__main__':
     for i in range(num_img_to_save):
         color_dir = "C:/Users/lg/Dokumente/BA/bachelorthesis/reference pictures"
         ensure_directory(color_dir)
-        get_image_from_cam(cam, color_dir)
+
+        picture_name = f"{probenname}-ref.jpg"
+        get_image_from_cam(cam, color_dir,file_name=picture_name)
 
     cam.Close()
 
@@ -129,7 +129,9 @@ if __name__ == '__main__':
             ensure_directory(sw_dir)
             save_image = x != 0  # False für 0, True für alle anderen
             print(f"save_image = {save_image}")
-            get_image_from_cam(cam, sw_dir, save_file=save_image)
+
+            picture_name = f"{probenname}-{x}.png"
+            get_image_from_cam(cam, sw_dir, save_file=save_image,file_name=)
 
 
         except genicam.GenericException as e:
