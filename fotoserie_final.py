@@ -6,6 +6,7 @@ import cv2
 import rpyc
 import platform
 import os
+import logging
 
 
 def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
@@ -68,8 +69,8 @@ if __name__ == '__main__':
     datei = "Test-"
 
     # The name of the pylon file handle
-    nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
-    nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
+    nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
+    nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
 
     num_img_to_save = 1
     img = pylon.PylonImage()
