@@ -7,20 +7,29 @@ import rpyc
 import platform
 import os
 
-# Dateiname
-datei = "Test-"
 
-# The name of the pylon file handle
-nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
-nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
-
-num_img_to_save = 1
-img = pylon.PylonImage()
-tlf = pylon.TlFactory.GetInstance()
-
-cam = pylon.InstantCamera(tlf.CreateFirstDevice())
-cam.Open()
-pylon.FeaturePersistence.Load(nodeFile1, cam.GetNodeMap(), True)
+def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
+    """
+    generates directories if they do not exist recursively if desired
+    :param target_folder:
+    :param recursive:
+    :return:
+    """
+    if recursive:
+        subfolders = target_folder.split("/")
+        for f_n in range(len(subfolders)):
+            folder = "/".join(subfolders[:f_n + 1])
+            if not os.path.exists(folder):
+                try:
+                    os.mkdir(folder)
+                except OSError:
+                    logging.error(f"failed to create folder {folder}")
+    else:
+        if not os.path.exists(target_folder):
+            try:
+                os.mkdir(target_folder)
+            except OSError:
+                logging.error(f"failed to create folder {target_folder}")
 
 
 def get_image_from_cam(camera, target_path):
@@ -54,56 +63,80 @@ def get_image_from_cam(camera, target_path):
         camera.StopGrabbing()
 
 
-for i in range(num_img_to_save):
-    get_image_from_cam(cam, "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures")
+if __name__ == '__main__':
+    # Dateiname
+    datei = "Test-"
 
-cam.Close()
+    # The name of the pylon file handle
+    nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
+    nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/cam settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
 
-i = 0
+    num_img_to_save = 1
+    img = pylon.PylonImage()
+    tlf = pylon.TlFactory.GetInstance()
 
-for x in range(0, 8):
-    img_count = str(i)
-    i = i + 1
-    # Number of images to be grabbed.
-    countOfImagesToGrab = 1
+    cam = pylon.InstantCamera(tlf.CreateFirstDevice())
+    cam.Open()
+    pylon.FeaturePersistence.Load(nodeFile1, cam.GetNodeMap(), True)
 
-    # The exit code of the sample application.
-    exitCode = 0
 
-    try:
+    for i in range(num_img_to_save):
+        color_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures"
+        ensure_directory(color_dir)
+        get_image_from_cam(cam, color_dir)
 
-        # Create an instant cam object with the cam device found first.
-        cam = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
-        cam.Open()
-        pylon.FeaturePersistence.Load(nodeFile2, cam.GetNodeMap(), True)
-        # Print the model name of the cam.
+    cam.Close()
 
-        print("Using device ", cam.GetDeviceInfo().GetModelName())
+    i = 0
 
-        # Just for demonstration, read the content of the file back to the cam's node map with enabled validation.
-        # demonstrate some feature access
-        new_width = cam.Width.GetValue() - cam.Width.GetInc()
-        if new_width >= cam.Width.GetMin():
-            cam.Width.SetValue(new_width)
+    for x in range(0, 8):
+        img_count = str(i)
+        i = i + 1
+        # Number of images to be grabbed.
+        countOfImagesToGrab = 1
 
-        # The parameter MaxNumBuffer can be used to control the count of buffers
-        # allocated for grabbing. The default value of this parameter is 10.
-        cam.MaxNumBuffer = 5
+        # The exit code of the sample application.
+        exitCode = 0
 
-        # Start the grabbing of c_countOfImagesToGrab images.
-        # The cam device is parameterized with a default configuration which
-        # sets up free-running continuous acquisition.
-        get_image_from_cam(cam, "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/color_pictures")
-        cam.Close()
+        try:
 
-    except genicam.GenericException as e:
-        # Error handling.
-        print("An exception occurred.")
-        print(e.GetDescription())
-        exitCode = 1
+            # Create an instant cam object with the cam device found first.
+            cam = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
+            cam.Open()
+            pylon.FeaturePersistence.Load(nodeFile2, cam.GetNodeMap(), True)
+            # Print the model name of the cam.
 
-    conn = rpyc.connect('192.168.178.175', port=18812)
-    conn.root.run_motor_degrees(20, 90)
-    conn.root.speak_message(img_count)
+            print("Using device ", cam.GetDeviceInfo().GetModelName())
 
-sys.exit(exitCode)
+            # Just for demonstration, read the content of the file back to the cam's node map with enabled validation.
+            # demonstrate some feature access
+            new_width = cam.Width.GetValue() - cam.Width.GetInc()
+            if new_width >= cam.Width.GetMin():
+                cam.Width.SetValue(new_width)
+
+            # The parameter MaxNumBuffer can be used to control the count of buffers
+            # allocated for grabbing. The default value of this parameter is 10.
+            cam.MaxNumBuffer = 5
+
+            # Start the grabbing of c_countOfImagesToGrab images.
+            # The cam device is parameterized with a default configuration which
+            # sets up free-running continuous acquisition.
+            sw_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/sw_pictures"
+            ensure_directory(sw_dir)
+            get_image_from_cam(cam, sw_dir)
+
+
+        except genicam.GenericException as e:
+            # Error handling.
+            print("An exception occurred.")
+            print(e.GetDescription())
+            exitCode = 1
+
+        finally:
+            cam.Close()
+
+        conn = rpyc.connect('192.168.178.175', port=18812)
+        conn.root.run_motor_degrees(20, 90)
+        conn.root.speak_message(img_count)
+
+    sys.exit(exitCode)
