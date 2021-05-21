@@ -33,7 +33,7 @@ def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
                 logging.error(f"failed to create folder {target_folder}")
 
 
-def get_image_from_cam(camera, target_path):
+def get_image_from_cam(camera, target_path, save_file=True):
     camera.StartGrabbing()
     with camera.RetrieveResult(2000) as result:
 
@@ -51,11 +51,13 @@ def get_image_from_cam(camera, target_path):
             # Verzeichnis der Referenzbilder
             os.chdir(target_path)
 
-            filename = datei + "ref.jpeg"  # % quality
-            img.Save(pylon.ImageFileFormat_Jpeg, filename, ipo)
+            if save_file:
+                filename = datei + "ref.jpeg"  # % quality
+                img.Save(pylon.ImageFileFormat_Jpeg, filename, ipo)
         else:
-            filename = "saved_pypylon_img_%d.png" % i
-            img.Save(pylon.ImageFileFormat_Png, filename)
+            if save_file:
+                filename = "saved_pypylon_img_%d.png" % i
+                img.Save(pylon.ImageFileFormat_Png, filename)
 
         # In order to make it possible to reuse the grab result for grabbing
         # again, we have to release the image (effectively emptying the
@@ -79,7 +81,6 @@ if __name__ == '__main__':
     cam = pylon.InstantCamera(tlf.CreateFirstDevice())
     cam.Open()
     pylon.FeaturePersistence.Load(nodeFile1, cam.GetNodeMap(), True)
-
 
     for i in range(num_img_to_save):
         color_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures"
@@ -124,7 +125,8 @@ if __name__ == '__main__':
             # sets up free-running continuous acquisition.
             sw_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/sw_pictures"
             ensure_directory(sw_dir)
-            get_image_from_cam(cam, sw_dir)
+            save_image = x != 0  # False für 0, True für alle anderen
+            get_image_from_cam(cam, sw_dir, save_file=save_image)
 
 
         except genicam.GenericException as e:
