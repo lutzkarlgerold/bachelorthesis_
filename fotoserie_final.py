@@ -1,3 +1,5 @@
+import datetime
+
 from pypylon import pylon
 from pypylon import genicam
 
@@ -96,7 +98,7 @@ if __name__ == '__main__':
         i = i + 1
         # Number of images to be grabbed.
         countOfImagesToGrab = 1
-
+        print(f"creating image {x} at {datetime.datetime.now()} ")
         # The exit code of the sample application.
         exitCode = 0
 
@@ -126,6 +128,7 @@ if __name__ == '__main__':
             sw_dir = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/sw_pictures"
             ensure_directory(sw_dir)
             save_image = x != 0  # False für 0, True für alle anderen
+
             get_image_from_cam(cam, sw_dir, save_file=save_image)
 
 
