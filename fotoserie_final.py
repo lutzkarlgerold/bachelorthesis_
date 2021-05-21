@@ -23,7 +23,7 @@ cam.Open()
 pylon.FeaturePersistence.Load(nodeFile1, cam.GetNodeMap(), True)
 
 
-def get_image_from_cam(camera):
+def get_image_from_cam(camera, target_path):
     camera.StartGrabbing()
     with camera.RetrieveResult(2000) as result:
 
@@ -39,7 +39,7 @@ def get_image_from_cam(camera):
             ipo.SetQuality(quality)
 
             # Verzeichnis der Referenzbilder
-            os.chdir("C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures")
+            os.chdir(target_path)
 
             filename = datei + "ref.jpeg"  # % quality
             img.Save(pylon.ImageFileFormat_Jpeg, filename, ipo)
@@ -54,9 +54,8 @@ def get_image_from_cam(camera):
         camera.StopGrabbing()
 
 
-
 for i in range(num_img_to_save):
-    get_image_from_cam(cam, )
+    get_image_from_cam(cam, "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/reference pictures")
 
 cam.Close()
 
@@ -94,7 +93,7 @@ for x in range(0, 8):
         # Start the grabbing of c_countOfImagesToGrab images.
         # The cam device is parameterized with a default configuration which
         # sets up free-running continuous acquisition.
-        get_image_from_cam(cam)
+        get_image_from_cam(cam, "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/color_pictures")
         cam.Close()
 
     except genicam.GenericException as e:
