@@ -72,7 +72,7 @@ if __name__ == '__main__':
     # The name of the pylon file handle
     nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
     nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
-
+    logging.basicConfig(level=logging.INFO)
     num_img_to_save = 1
     img = pylon.PylonImage()
     tlf = pylon.TlFactory.GetInstance()
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         i = i + 1
         # Number of images to be grabbed.
         countOfImagesToGrab = 1
-        print(f"creating image {x} at {datetime.datetime.now()} ")
+        logging.info(f"creating image {x} at {datetime.datetime.now()} ")
         # The exit code of the sample application.
         exitCode = 0
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
             pylon.FeaturePersistence.Load(nodeFile2, cam.GetNodeMap(), True)
             # Print the model name of the cam.
 
-            print("Using device ", cam.GetDeviceInfo().GetModelName())
+            logging.info("Using device ", cam.GetDeviceInfo().GetModelName())
 
             # Just for demonstration, read the content of the file back to the cam's node map with enabled validation.
             # demonstrate some feature access
@@ -127,7 +127,7 @@ if __name__ == '__main__':
             sw_dir = "C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures"
             ensure_directory(sw_dir)
             save_image = x != 0  # False für 0, True für alle anderen
-            print(f"save_image = {save_image}")
+            logging.info(f"save_image = {save_image}")
 
             picture_name = f"{probenname}-{x}.png"
             get_image_from_cam(cam, sw_dir, save_file=save_image, file_name=picture_name)
@@ -135,8 +135,8 @@ if __name__ == '__main__':
 
         except genicam.GenericException as e:
             # Error handling.
-            print("An exception occurred.")
-            print(e.GetDescription())
+            logging.error("An exception occurred.")
+            logging.error(e.GetDescription())
             exitCode = 1
 
         finally:
