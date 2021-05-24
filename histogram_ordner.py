@@ -11,7 +11,7 @@ import glob, os
 from scipy import stats
 
 # Verzeichnis der Bilder
-os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures") = Folder
+Folder = os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures")
 
 # Anzahl der png-Dateien im Ordner zählen
 #Folder = "C:\\"
@@ -38,7 +38,7 @@ with  open("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt", "r")
 # Header des Daten-Files erstellen        
 with open('input_daten.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
-    csv_output.writerow(Counter)
+    csv_output.writerow([int(Counter)])
 
 # Header des Noten-Files erstellen
 with open('input_noten.txt', 'a', newline='') as f_output:
