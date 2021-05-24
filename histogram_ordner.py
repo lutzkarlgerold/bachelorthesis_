@@ -11,16 +11,26 @@ import glob, os
 from scipy import stats
 
 # Verzeichnis der Bilder
-os.chdir("C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/Diff_1zu1/recall_7")
+os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures") = Folder
+
+# Anzahl der png-Dateien im Ordner zählen
+#Folder = "C:\\"
+Counter = 0
+Files = os.listdir(Folder)
+
+for File in Files:
+    [Dummy, Ext] = os.path.splitext(File)
+    if Ext == ".png":
+        Counter += 1
 
 # Ort der Liste mit Noten
-# grades = ("C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/Notenliste/grades.txt")
+# grades = ("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt")
 
 # Ort der Outputdaten
 # output = ("C:/Users/lg/Dokumente/BA/004-013 Erste Serie für NN/Test 5 Histowerte via Py/output_dir")
 
 # Output-Noten als Dictionary einlesen
-with  open("C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/Notenliste/grades.txt", "r") as f:
+with  open("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt", "r") as f:
     rows = ( line.rstrip('\n').split('\t') for line in f )
     d = { row[0]:row[1] for row in rows }
     print(d)
@@ -28,7 +38,7 @@ with  open("C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/Notenliste/gra
 # Header des Daten-Files erstellen        
 with open('input_daten.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
-    csv_output.writerow(['mean', 'std', 'max', 'mode'])
+    csv_output.writerow(Counter)
 
 # Header des Noten-Files erstellen
 with open('input_noten.txt', 'a', newline='') as f_output:
