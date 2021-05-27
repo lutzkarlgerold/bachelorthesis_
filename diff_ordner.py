@@ -4,25 +4,27 @@ Created on Fri Dec 11 11:19:25 2020
 
 @author: lg
 """
+import pathlib
 from PIL import Image, ImageChops
 import os
+import datetime
 
 # Verzeichnis der Bilder
 
-def difference(Probe="004",n_images_max):
+def difference(Probe="004", n_images_max=2):
     bild_format = "{}-{}-"
     bilder = []
     
     for i in range(9):
         try:
-            bild_format.format(Probe,n_images_max +1)
+            bilder.append(bild_format.format(Probe, n_images_max +1))
         except FileNotFoundError as F_e:
             if i == 0:
                 raise F_e
             else:
-                break
                 print(f"found {i+1} images for {Probe}")
-
+                break
+    print(f"found {i+1} images for {Probe}")
     i = 1
 
     for x in range(0, 8):
@@ -30,22 +32,24 @@ def difference(Probe="004",n_images_max):
         i = i + 1
         images = []
         for i_p in bilder:
-            images.append(Image.open(Datei1 + img_count + ".png"))
-            
-        for image in images[1:]:
+            images.append(Image.open(i_p + img_count + ".png"))
+
+        for i, image in enumerate(images[1:]):
             diff = ImageChops.difference(images[0], image)
-            if diff.getbbox():
-                diff.save("./diff/" + Datei2 + img_count + "-diff.png")
+
+            if diff.getbbox(): # hier ist irgendwas falsch
+                print(1)
+                diff.save("./diff/" + bilder[i+1] + img_count + "-diff.png")
 
 if __name__ == '__main__':
 
-    workdir = "C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures/Gruppe1"
+    workdir = "./input_pictures/Gruppe1"
     os.chdir(workdir)
 
     # difference("005")
     min_number = 1
     max_number = 150
-    workdir_path = pathlib.Path(workdir)
+    workdir_path = pathlib.Path(".")
     print(workdir_path.iterdir())
     path_content = [x for x in workdir_path.iterdir()]
     number_format = "{:03}"
