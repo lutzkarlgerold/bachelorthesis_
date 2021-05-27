@@ -88,6 +88,5 @@ if __name__ == '__main__':
             print(f"Probe {i_p} bearbeitet um: {datetime.datetime.now()}")
         except FileNotFoundError as F_e:
             print(f"Probe {i_p} existiert nicht ")
-            raise F_e
     print(number_format.format(max_number))
     print(number_format.format(min_number))
