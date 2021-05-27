@@ -9,37 +9,65 @@ from PIL import Image, ImageChops
 import os
 import datetime
 
+def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
+    """
+    generates directories if they do not exist recursively if desired
+    :param target_folder:
+    :param recursive:
+    :return:
+    """
+    if recursive:
+        subfolders = target_folder.split("/")
+        for f_n in range(len(subfolders)):
+            folder = "/".join(subfolders[:f_n + 1])
+            if not os.path.exists(folder):
+                try:
+                    os.mkdir(folder)
+                except OSError:
+                    logging.error(f"failed to create folder {folder}")
+    else:
+        if not os.path.exists(target_folder):
+            try:
+                os.mkdir(target_folder)
+            except OSError:
+                logging.error(f"failed to create folder {target_folder}")
 # Verzeichnis der Bilder
 
-def difference(Probe="004", n_images_max=2):
+def difference(Probe="004", n_images_max=8):
     bild_format = "{}-{}-"
     bilder = []
     
-    for i in range(9):
-        try:
-            bilder.append(bild_format.format(Probe, n_images_max +1))
-        except FileNotFoundError as F_e:
-            if i == 0:
-                raise F_e
-            else:
-                print(f"found {i+1} images for {Probe}")
-                break
-    print(f"found {i+1} images for {Probe}")
+    for i in range(n_images_max+1):
+
+        bilder.append(bild_format.format(Probe, i))
+
+
+
     i = 1
 
     for x in range(0, 8):
         img_count = str(i)
         i = i + 1
         images = []
-        for i_p in bilder:
-            images.append(Image.open(i_p + img_count + ".png"))
+        first = True
+        for image_name in bilder:
 
-        for i, image in enumerate(images[1:]):
+            try:
+                images.append(Image.open(image_name + img_count + ".png"))
+                first = False
+            except FileNotFoundError as F_e:
+                if first:
+                    raise F_e
+                else:
+                    break
+        for j, image in enumerate(images[1:]):
             diff = ImageChops.difference(images[0], image)
 
-            if diff.getbbox(): # hier ist irgendwas falsch
-                print(1)
-                diff.save("./diff/" + bilder[i+1] + img_count + "-diff.png")
+            if diff.getbbox():  # hier ist irgendwas falsch
+
+                ensure_directory("./diff")
+                print(bilder[j+1] + str(i) + "-diff.png")
+                diff.save("./diff/" + bilder[j+1] + str(i) + "-diff.png")
 
 if __name__ == '__main__':
 
@@ -47,7 +75,7 @@ if __name__ == '__main__':
     os.chdir(workdir)
 
     # difference("005")
-    min_number = 1
+    min_number = 127
     max_number = 150
     workdir_path = pathlib.Path(".")
     print(workdir_path.iterdir())
@@ -58,8 +86,8 @@ if __name__ == '__main__':
         try:
             difference(number_format.format(i_p))
             print(f"Probe {i_p} bearbeitet um: {datetime.datetime.now()}")
-        except FileNotFoundError:
+        except FileNotFoundError as F_e:
             print(f"Probe {i_p} existiert nicht ")
-
+            raise F_e
     print(number_format.format(max_number))
     print(number_format.format(min_number))
