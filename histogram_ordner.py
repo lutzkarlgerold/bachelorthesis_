@@ -11,7 +11,7 @@ import glob, os
 from scipy import stats
 
 # Verzeichnis der Bilder
-Folder = os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures/Gruppe1/diff")
+Folder = os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures/Gruppe1/diff/recall")
 
 # Anzahl der png-Dateien im Ordner zählen
 Counter = 0
@@ -29,12 +29,12 @@ with  open("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt", "r")
     print(d)
 
 # Header des Daten-Files erstellen (Summe der Datensätze)
-with open('input_daten.txt', 'a', newline='') as f_output:
+with open('recall_daten.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
     csv_output.writerow([int(Counter)])
 
 # Header des Noten-Files erstellen (Summe der Datensätze)
-with open('input_noten.txt', 'a', newline='') as f_output:
+with open('recall_noten.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
     csv_output.writerow([int(Counter)])
 
@@ -43,8 +43,8 @@ for file in glob.glob("*.png"):
     print (os.path.basename(file))
     sample = os.path.basename(file)
     file[0]
-#    samplename = file[0]+file[1]+file[2]+file[3]+file[4]
-#    print (samplename)
+    samplename = file[0]+file[1]+file[2]+file[3]+file[4]
+    print (samplename)
 
 # Bildausschnitt wird geladen
     image0 = cv2.imread(file)
@@ -56,7 +56,7 @@ for file in glob.glob("*.png"):
     total_mode = stats.mode(hist, axis=None)
 
     # Histogramm-Daten in TXT-file schreiben    
-    with open('input_daten.txt', 'a', newline='') as f_output:
+    with open('recall_daten.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output, delimiter=' ')
         csv_output.writerow([int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0])])
     # Ausgabe aller Histogramm-Werte
@@ -75,7 +75,7 @@ for file in glob.glob("*.png"):
     sn = dict.get(samplename)
     print ("Note: %s" % sn)
 
-    with open('input_noten.txt', 'a', newline='') as f_output:
+    with open('recall_noten.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output)
         csv_output.writerow([sn])       
         

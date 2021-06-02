@@ -69,7 +69,7 @@ def get_image_from_cam(camera, target_path, save_file=True, file_name="Test-ref.
 
 if __name__ == '__main__':
     # Dateiname
-    probenname = "041-2"
+    probenname = "Demo"
     # The name of the pylon file handle
     nodeFile1 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-04-22_acA4600-10uc_23004624_bay8.pfs"
     nodeFile2 = "C:/Users/lg/Dokumente/BA/004-129 finale Serie für NN/camera settings/2021-05-21 acA4600-10uc_23004624_ET4200.pfs"
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         finally:
             cam.Close()
 
-        conn = rpyc.connect('192.168.178.175', port=18812)
+        conn = rpyc.connect('192.168.177.36', port=18812)
         conn.root.run_motor_degrees(20, 45)
         conn.root.speak_message(img_count)
 
