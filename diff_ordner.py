@@ -38,13 +38,16 @@ def ensure_directory(target_folder: [str, os.path], recursive=False) -> None:
 # Verzeichnis der Bilder
 
 class SampleGroup:
-    def __init__(self, sample_name, max_pilling_stage=8):
+    def __init__(self, sample_name, max_pilling_stage=8, file_location="."):
         self.sample_name = sample_name
         self.images: List[List[Image]] = []
         self.differences: ListList[[Image]] = []
+        self.histograms = []
         self.fill_images(max_pilling_stage=max_pilling_stage)
+        self.file_location = file_location
 
     def fill_images(self, max_pilling_stage=8):
+        os.chdir(self.file_location)
         pil_stage_name_format = "{}-{}-"
         pil_stage_names = []
 
@@ -56,7 +59,7 @@ class SampleGroup:
         for pil_stage_name in pil_stage_names:
             first_image_in_stage = True
             for i in range(0, 8):
-                img_count = str(i+1)
+                img_count = str(i + 1)
                 try:
                     image = Image.open(pil_stage_name + img_count + ".png")
                     if first_image_in_stage:
@@ -84,7 +87,17 @@ class SampleGroup:
         """
 
     def create_diffs(self):
-        raise NotImplementedError # Todo
+        raise NotImplementedError  # Todo
+
+    def create_histograms(self):
+        raise NotImplementedError
+
+    def create_features(self):
+        raise NotImplementedError
+        return [1,2,3]
+
+    def create_recall(self):
+        raise NotImplementedError  # tbd
 
     def __repr__(self):
         return f"sample name : {self.sample_name}, number of images = {len(self.images)}"
@@ -132,8 +145,7 @@ if __name__ == '__main__':
     print(probe)
     print(probe.images)
 
-    """
-    
+
     # fill_images("005")
     min_number = 1
     max_number = 150
@@ -150,4 +162,4 @@ if __name__ == '__main__':
             print(f"Probe {i_p} existiert nicht ")
     print(number_format.format(max_number))
     print(number_format.format(min_number))
-    """
+
