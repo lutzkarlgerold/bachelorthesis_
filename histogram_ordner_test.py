@@ -11,7 +11,7 @@ import glob, os
 from scipy import stats
 
 # Verzeichnis der Bilder
-Folder = os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures/Gruppe1/diff")
+Folder = os.chdir("C:/Users/lg/Dokumente/BA/bachelorthesis/input_pictures/Gruppe1/diff/recall")
 
 # Anzahl der png-Dateien im Ordner zählen
 Counter = 0
@@ -29,12 +29,17 @@ with  open("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt", "r")
     print(d)
 
 # Header des Daten-Files erstellen (Summe der Datensätze)
-with open('input_daten.txt', 'a', newline='') as f_output:
+with open('recall_daten.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
     csv_output.writerow([int(Counter)])
 
 # Header des Noten-Files erstellen (Summe der Datensätze)
-with open('input_noten.txt', 'a', newline='') as f_output:
+with open('recall_noten.txt', 'a', newline='') as f_output:
+    csv_output = csv.writer(f_output, delimiter=' ')
+    csv_output.writerow([int(Counter)])
+
+# Header des Control-Files erstellen (Samplename, Histo-Werte, Note)
+with open('recall_control.txt', 'a', newline='') as f_output:
     csv_output = csv.writer(f_output, delimiter=' ')
     csv_output.writerow([int(Counter)])
 
@@ -56,7 +61,7 @@ for file in glob.glob("*.png"):
     total_mode = stats.mode(hist, axis=None)
 
     # Histogramm-Daten in TXT-file schreiben    
-    with open('input_daten.txt', 'a', newline='') as f_output:
+    with open('recall_daten.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output, delimiter=' ')
         csv_output.writerow([int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0])])
     # Ausgabe aller Histogramm-Werte
@@ -75,8 +80,21 @@ for file in glob.glob("*.png"):
     sn = dict.get(samplename)
     print ("Note: %s" % sn)
 
-    with open('input_noten.txt', 'a', newline='') as f_output:
+    with open('recall_noten.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output)
         csv_output.writerow([sn])       
-        
+
+    # Control-Daten in TXT-file schreiben
+    with open('recall_control.txt', 'a', newline='') as f_output:
+        csv_output = csv.writer(f_output, delimiter=' ')
+        csv_output.writerow([samplename, int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0]), sn])
+    # Ausgabe aller Histogramm-Werte
+    print ("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
+        np.mean(hist).item(),
+        np.std(hist).item(),
+        len(hist)*len(hist),
+        np.min(hist).item(),
+        np.max(hist).item()
+        ))
+
 cv2.waitKey(0)
