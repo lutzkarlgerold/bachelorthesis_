@@ -1,3 +1,4 @@
+import csv
 import pathlib
 from PIL import Image, ImageChops
 import os
@@ -17,7 +18,8 @@ class SampleGroup:
         self.fill_images(max_pilling_stage=max_pilling_stage)
         self.file_location = file_location
         self.features = []
-
+        self.create_diffs()
+        self.create_features()
     def fill_images(self, max_pilling_stage=8):
         """
         Todo
@@ -76,7 +78,7 @@ class SampleGroup:
                 cv2.hi  # todo
         raise NotImplementedError
 
-    def create_features(self):
+    def create_features(self,verbose=True):
         """
 
         :return:
@@ -94,15 +96,29 @@ class SampleGroup:
                 size = len(diff) * len(diff)
                 _min = np.min(diff)
                 _max = np.max(diff)
-                print(
-                    "Sample {}, group {},difference {}  Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
-                        self.sample_name, n_diff_group, n_diff, mean, std, size, _min, _max))
+                if verbose:
+                    print(
+                        "Sample {}, group {},difference {}  Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
+                            self.sample_name, n_diff_group, n_diff, mean, std, size, _min, _max))
                 feature_list = [mean, std, size, _min, _max]
                 self.features[-1].append(feature_list)
+    def write_features(self,out_file,header=False):
+        writemode = "a"
+        if header:
+            writemode="w"
+        with open(out_file,writemode,newline="")as o_file:
+            writer = csv.writer(o_file)
+            head = ["sample_name", "n_diff_group", "n_diff", "mean", "std", "size", "min", "max"]
+            if header:
+                writer.writerow(head)
+            for n_feature_group, feature_group in enumerate(self.features):
+                for n_feature, feature in enumerate(feature_group):
+                    writer.writerow([self.sample_name,n_feature_group,n_feature,*feature])
 
     def create_recall(self):
         raise NotImplementedError  # tbd
-
+    def aggregate_group(self):
+        raise NotImplementedError
     def __repr__(self):
         return f"sample name : {self.sample_name}, number of image_groups = {len(self.images)}"
 
@@ -113,8 +129,22 @@ if __name__ == '__main__':
     s = SampleGroup("125")
     print(s)
     # s.images[0][0].show()
-    s.create_diffs()
     print(len(s.images), len(s.images[0]))
     print(len(s.differences), len(s.differences[0]))
-    s.create_features()
     print(s.features)
+    s.write_features("../../test,csv",header=True)
+
+    # create all sample files
+    samples=[]
+    number_format = "{:03}"
+    for i_sample in range(128):
+        try:
+            s = SampleGroup(sample_name=number_format.format(i_sample))
+        except FileNotFoundError:
+            print(f"sample {i_sample} not in folder")
+            continue
+        samples.append(s)
+    first =True
+    for s in samples:
+        s.write_features(out_file="../../test,csv",header=first)
+        first=False
