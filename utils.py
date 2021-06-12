@@ -4,8 +4,9 @@ import os
 import datetime
 from typing import List
 import cv2
-from scipy  import stats
+from scipy import stats
 import numpy as np
+
 
 class SampleGroup:
     def __init__(self, sample_name, max_pilling_stage=8, file_location="."):
@@ -15,7 +16,7 @@ class SampleGroup:
         self.histograms = []
         self.fill_images(max_pilling_stage=max_pilling_stage)
         self.file_location = file_location
-        self.features=[]
+        self.features = []
 
     def fill_images(self, max_pilling_stage=8):
         """
@@ -72,7 +73,7 @@ class SampleGroup:
         for dif_group in self.differences:
             self.histograms.append([])
             for dif in dif_group:
-                cv2.hi# todo
+                cv2.hi  # todo
         raise NotImplementedError
 
     def create_features(self):
@@ -80,25 +81,23 @@ class SampleGroup:
 
         :return:
         """
-        for diff_group in self.images:
+
+        for n_diff_group, diff_group in enumerate(self.images):
             self.features.append([])
-            for diff in diff_group:
+            for n_diff, diff in enumerate(diff_group):
                 feature_list = []
                 diff = np.array(diff)
 
-                mean = np.mean(diff).item(),
-                std = np.std(diff).item(),
-                size = len(diff) * len(diff),
-                min = np.min(diff).item(),
-                max = np.max(diff).item()
-                print("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
-                    np.mean(diff).item(),
-                    np.std(diff).item(),
-                    len(diff) * len(diff),
-                    np.min(diff).item(),
-                    np.max(diff).item()
-                ))
-                feature_list=[mean,std,size,min,max]
+                mean = np.mean(diff)
+
+                std = np.std(diff)
+                size = len(diff) * len(diff)
+                _min = np.min(diff)
+                _max = np.max(diff)
+                print(
+                    "Sample {}, group {},difference {}  Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
+                        self.sample_name, n_diff_group, n_diff, mean, std, size, _min, _max))
+                feature_list = [mean, std, size, _min, _max]
                 self.features[-1].append(feature_list)
 
     def create_recall(self):
