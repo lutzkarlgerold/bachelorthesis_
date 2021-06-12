@@ -24,8 +24,8 @@ for File in Files:
 
 # Output-Noten als Dictionary einlesen
 with  open("C:/Users/lg/Dokumente/BA/bachelorthesis/Notenliste/grades.txt", "r") as f:
-    rows = ( line.rstrip('\n').split('\t') for line in f )
-    d = { row[0]:row[1] for row in rows }
+    rows = (line.rstrip('\n').split('\t') for line in f)
+    d = {row[0]: row[1] for row in rows}
     print(d)
 
 # Header des Daten-Files erstellen (Summe der Datensätze)
@@ -45,18 +45,18 @@ with open('recall_control.txt', 'a', newline='') as f_output:
 
 # Dateiname wird ausgegeben
 for file in glob.glob("*.png"):
-    print (os.path.basename(file))
+    print(os.path.basename(file))
     sample = os.path.basename(file)
     file[0]
-    samplename = file[0]+file[1]+file[2]+file[3]+file[4]
-    print (samplename)
+    samplename = file[0] + file[1] + file[2] + file[3] + file[4]
+    print(samplename)
 
-# Bildausschnitt wird geladen
+    # Bildausschnitt wird geladen
     image0 = cv2.imread(file)
 
-# Variable für Histogramm wird erzeugt
+    # Variable für Histogramm wird erzeugt
     hist = image0
-    
+
     mode = stats.mode(hist)
     total_mode = stats.mode(hist, axis=None)
 
@@ -65,36 +65,37 @@ for file in glob.glob("*.png"):
         csv_output = csv.writer(f_output, delimiter=' ')
         csv_output.writerow([int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0])])
     # Ausgabe aller Histogramm-Werte
-    print ("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
+    print("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
         np.mean(hist).item(),
         np.std(hist).item(),
-        len(hist)*len(hist),
+        len(hist) * len(hist),
         np.min(hist).item(),
         np.max(hist).item()
-        ))
+    ))
 
     print("mode = {}".format(total_mode.mode[0]))
-    
+
     # Noten aus Dictionary in TXT-File schreiben
     dict = d
     sn = dict.get(samplename)
-    print ("Note: %s" % sn)
+    print("Note: %s" % sn)
 
     with open('recall_noten.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output)
-        csv_output.writerow([sn])       
+        csv_output.writerow([sn])
 
-    # Control-Daten in TXT-file schreiben
+        # Control-Daten in TXT-file schreiben
     with open('recall_control.txt', 'a', newline='') as f_output:
         csv_output = csv.writer(f_output, delimiter=' ')
-        csv_output.writerow([samplename, int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0]), sn])
+        csv_output.writerow(
+            [samplename, int(np.mean(hist)), int(np.std(hist)), np.max(hist), format(total_mode.mode[0]), sn])
     # Ausgabe aller Histogramm-Werte
-    print ("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
+    print("Mean = {:.1f}, standard deviation = {:.1f}, Count = {:.0f}, min = {:.0f}, max = {:.0f}".format(
         np.mean(hist).item(),
         np.std(hist).item(),
-        len(hist)*len(hist),
+        len(hist) * len(hist),
         np.min(hist).item(),
         np.max(hist).item()
-        ))
+    ))
 
 cv2.waitKey(0)
